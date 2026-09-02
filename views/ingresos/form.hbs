@@ -1,0 +1,33 @@
+<form class="form" method="post" action="{{action}}" novalidate>
+  <div class="form-grid">
+    <label>
+      Fecha
+      <input type="date" name="fecha" value="{{values.fecha}}" required />
+      {{#if errors.fecha}}<span class="field-error">{{errors.fecha}}</span>{{/if}}
+    </label>
+    <label>
+      Categoría
+      <input name="categoria" value="{{values.categoria}}" maxlength="80" required />
+      {{#if errors.categoria}}<span class="field-error">{{errors.categoria}}</span>{{/if}}
+    </label>
+    <label class="full">
+      Descripción
+      <input name="descripcion" value="{{values.descripcion}}" maxlength="200" required />
+      {{#if errors.descripcion}}<span class="field-error">{{errors.descripcion}}</span>{{/if}}
+    </label>
+    <label>
+      Valor
+      <input type="number" name="valor" min="1" step="1" value="{{values.valor}}" required />
+      {{#if errors.valor}}<span class="field-error">{{errors.valor}}</span>{{/if}}
+    </label>
+    <label class="full">
+      Observación
+      <textarea name="observacion" rows="3" maxlength="500">{{values.observacion}}</textarea>
+      {{#if errors.observacion}}<span class="field-error">{{errors.observacion}}</span>{{/if}}
+    </label>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <a class="btn" href="/ingresos">Cancelar</a>
+  </div>
+</form>

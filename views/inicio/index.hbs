@@ -1,0 +1,32 @@
+<section class="page-intro">
+  <p>
+    Resumen del Hotel Bucaro: tareas del hotel y movimiento económico del mes en curso.
+  </p>
+</section>
+
+<div class="cards-grid">
+  <article class="card">
+    <h2>Tareas</h2>
+    <p class="metric">{{tareas.total}}</p>
+    <p class="muted">{{tareas.pendientes}} pendientes · {{tareas.completadas}} completadas</p>
+    <a class="link" href="/tareas">Ver tareas</a>
+  </article>
+  <article class="card">
+    <h2>Ingresos del mes</h2>
+    <p class="metric">{{money totalIngresos}}</p>
+    <p class="muted">Del {{date periodo.desde}} al {{date periodo.hasta}}</p>
+    <a class="link" href="/ingresos">Registrar ingreso</a>
+  </article>
+  <article class="card">
+    <h2>Gastos del mes</h2>
+    <p class="metric">{{money totalGastos}}</p>
+    <p class="muted">Del {{date periodo.desde}} al {{date periodo.hasta}}</p>
+    <a class="link" href="/gastos">Registrar gasto</a>
+  </article>
+  <article class="card highlight">
+    <h2>Balance general</h2>
+    <p class="metric {{balanceClass balance}}">{{money balance}}</p>
+    <p class="muted">Ingresos menos gastos del período</p>
+    <a class="link" href="/reportes">Ver reportes</a>
+  </article>
+</div>

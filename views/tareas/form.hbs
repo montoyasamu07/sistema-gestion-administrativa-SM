@@ -1,0 +1,47 @@
+<form class="form" method="post" action="{{action}}" novalidate>
+  <div class="form-grid">
+    <label>
+      Nombre
+      <input name="nombre" value="{{values.nombre}}" maxlength="120" required />
+      {{#if errors.nombre}}<span class="field-error">{{errors.nombre}}</span>{{/if}}
+    </label>
+    <label>
+      Prioridad
+      <select name="prioridad" required>
+        <option value="">Seleccione</option>
+        {{#each prioridades}}
+          <option value="{{this}}" {{#if (eq ../values.prioridad this)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+      </select>
+      {{#if errors.prioridad}}<span class="field-error">{{errors.prioridad}}</span>{{/if}}
+    </label>
+    <label class="full">
+      Descripción
+      <textarea name="descripcion" rows="4" maxlength="1000" required>{{values.descripcion}}</textarea>
+      {{#if errors.descripcion}}<span class="field-error">{{errors.descripcion}}</span>{{/if}}
+    </label>
+    <label>
+      Fecha de registro
+      <input type="date" name="fechaRegistro" value="{{values.fechaRegistro}}" required />
+      {{#if errors.fechaRegistro}}<span class="field-error">{{errors.fechaRegistro}}</span>{{/if}}
+    </label>
+    <label>
+      Fecha límite
+      <input type="date" name="fechaLimite" value="{{values.fechaLimite}}" required />
+      {{#if errors.fechaLimite}}<span class="field-error">{{errors.fechaLimite}}</span>{{/if}}
+    </label>
+    <label>
+      Estado
+      <select name="estado">
+        {{#each estados}}
+          <option value="{{this}}" {{#if (eq ../values.estado this)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+      </select>
+      {{#if errors.estado}}<span class="field-error">{{errors.estado}}</span>{{/if}}
+    </label>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <a class="btn" href="/tareas">Cancelar</a>
+  </div>
+</form>

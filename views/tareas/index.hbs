@@ -1,0 +1,52 @@
+{{#if mensaje}}
+  <div class="alert">{{mensaje}}</div>
+{{/if}}
+
+<div class="toolbar">
+  <p>Consulte, actualice y organice las tareas y pendientes del hotel.</p>
+  <a class="btn btn-primary" href="/tareas/nueva">Nueva tarea</a>
+</div>
+
+{{#if tareas.length}}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Fecha registro</th>
+          <th>Fecha límite</th>
+          <th>Prioridad</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each tareas}}
+          <tr>
+            <td>{{id}}</td>
+            <td>
+              <strong>{{nombre}}</strong>
+              <div class="cell-muted">{{descripcion}}</div>
+            </td>
+            <td>{{date fechaRegistro}}</td>
+            <td>{{date fechaLimite}}</td>
+            <td><span class="badge {{prioridadClass prioridad}}">{{prioridad}}</span></td>
+            <td><span class="badge {{estadoClass estado}}">{{estado}}</span></td>
+            <td class="actions">
+              <a class="btn btn-small" href="/tareas/{{id}}/editar">Editar</a>
+              <form method="post" action="/tareas/{{id}}/estado">
+                <button class="btn btn-small" type="submit">Cambiar estado</button>
+              </form>
+              <form method="post" action="/tareas/{{id}}/eliminar" data-confirm="¿Eliminar esta tarea?">
+                <button class="btn btn-small btn-danger" type="submit">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{else}}
+  <div class="empty">No hay tareas registradas. Cree la primera para comenzar el seguimiento.</div>
+{{/if}}

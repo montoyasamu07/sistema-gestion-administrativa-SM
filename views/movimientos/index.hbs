@@ -1,0 +1,57 @@
+<section class="page-intro">
+  <p>Consulte ingresos y gastos registrados y fíltrealos por fechas.</p>
+</section>
+
+<form class="filters" method="get" action="/movimientos">
+  <label>
+    Desde
+    <input type="date" name="desde" value="{{desde}}" required />
+  </label>
+  <label>
+    Hasta
+    <input type="date" name="hasta" value="{{hasta}}" required />
+  </label>
+  <button class="btn btn-primary" type="submit">Filtrar</button>
+  <a class="btn" href="/movimientos">Mes actual</a>
+</form>
+
+{{#if filtroInvalido}}
+  <div class="alert alert-error">La fecha inicial no puede ser posterior a la fecha final.</div>
+{{/if}}
+
+<div class="summary-row">
+  <span>Ingresos: <strong>{{money totalIngresos}}</strong></span>
+  <span>Gastos: <strong>{{money totalGastos}}</strong></span>
+  <span>Balance: <strong class="{{balanceClass balance}}">{{money balance}}</strong></span>
+</div>
+
+{{#if movimientos.length}}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Descripción</th>
+          <th>Categoría</th>
+          <th>Valor</th>
+          <th>Observación</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each movimientos}}
+          <tr>
+            <td>{{date fecha}}</td>
+            <td class="{{tipoClass tipo}}"><strong>{{tipo}}</strong></td>
+            <td>{{descripcion}}</td>
+            <td>{{categoria}}</td>
+            <td>{{money valor}}</td>
+            <td>{{observacion}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{else}}
+  <div class="empty">No hay movimientos en el período seleccionado.</div>
+{{/if}}

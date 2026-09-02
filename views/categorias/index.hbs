@@ -1,0 +1,16 @@
+<section class="page-intro">
+  <p>
+    Estas categorías se utilizan para clasificar los gastos del Hotel Bucaro.
+    Al registrar un gasto, seleccione una de las siguientes opciones.
+  </p>
+</section>
+
+<div class="cards-grid categories">
+  {{#each categorias}}
+    <article class="card">
+      <h2>{{nombre}}</h2>
+      <p class="muted">{{descripcion}}</p>
+      <a class="link" href="/gastos/nuevo">Registrar gasto</a>
+    </article>
+  {{/each}}
+</div>

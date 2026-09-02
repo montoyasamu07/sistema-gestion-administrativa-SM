@@ -1,0 +1,60 @@
+<section class="page-intro">
+  <p>
+    Totales de ingresos, gastos y balance por período. Los gastos también se
+    presentan por categoría.
+  </p>
+</section>
+
+<form class="filters" method="get" action="/reportes">
+  <label>
+    Desde
+    <input type="date" name="desde" value="{{desde}}" required />
+  </label>
+  <label>
+    Hasta
+    <input type="date" name="hasta" value="{{hasta}}" required />
+  </label>
+  <button class="btn btn-primary" type="submit">Consultar</button>
+  <a class="btn" href="/reportes">Mes actual</a>
+</form>
+
+{{#if filtroInvalido}}
+  <div class="alert alert-error">La fecha inicial no puede ser posterior a la fecha final.</div>
+{{/if}}
+
+<div class="cards-grid">
+  <article class="card">
+    <h2>Total ingresos</h2>
+    <p class="metric">{{money totalIngresos}}</p>
+  </article>
+  <article class="card">
+    <h2>Total gastos</h2>
+    <p class="metric">{{money totalGastos}}</p>
+  </article>
+  <article class="card highlight">
+    <h2>Balance</h2>
+    <p class="metric {{balanceClass balance}}">{{money balance}}</p>
+  </article>
+</div>
+
+<h2 class="section-title">Gastos por categoría</h2>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Categoría</th>
+        <th>Cantidad</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each porCategoria}}
+        <tr>
+          <td>{{categoria}}</td>
+          <td>{{cantidad}}</td>
+          <td>{{money total}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

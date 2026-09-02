@@ -1,0 +1,46 @@
+{{#if mensaje}}
+  <div class="alert">{{mensaje}}</div>
+{{/if}}
+
+<div class="toolbar">
+  <p>Registre, consulte y actualice los gastos, clasificados por categoría.</p>
+  <a class="btn btn-primary" href="/gastos/nuevo">Nuevo gasto</a>
+</div>
+
+{{#if gastos.length}}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Descripción</th>
+          <th>Categoría</th>
+          <th>Valor</th>
+          <th>Observación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each gastos}}
+          <tr>
+            <td>{{id}}</td>
+            <td>{{date fecha}}</td>
+            <td>{{descripcion}}</td>
+            <td>{{categoria}}</td>
+            <td>{{money valor}}</td>
+            <td>{{observacion}}</td>
+            <td class="actions">
+              <a class="btn btn-small" href="/gastos/{{id}}/editar">Editar</a>
+              <form method="post" action="/gastos/{{id}}/eliminar" data-confirm="¿Eliminar este gasto?">
+                <button class="btn btn-small btn-danger" type="submit">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{else}}
+  <div class="empty">No hay gastos registrados.</div>
+{{/if}}

@@ -1,0 +1,46 @@
+{{#if mensaje}}
+  <div class="alert">{{mensaje}}</div>
+{{/if}}
+
+<div class="toolbar">
+  <p>Registre, consulte y actualice los ingresos del hotel.</p>
+  <a class="btn btn-primary" href="/ingresos/nuevo">Nuevo ingreso</a>
+</div>
+
+{{#if ingresos.length}}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Descripción</th>
+          <th>Categoría</th>
+          <th>Valor</th>
+          <th>Observación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each ingresos}}
+          <tr>
+            <td>{{id}}</td>
+            <td>{{date fecha}}</td>
+            <td>{{descripcion}}</td>
+            <td>{{categoria}}</td>
+            <td>{{money valor}}</td>
+            <td>{{observacion}}</td>
+            <td class="actions">
+              <a class="btn btn-small" href="/ingresos/{{id}}/editar">Editar</a>
+              <form method="post" action="/ingresos/{{id}}/eliminar" data-confirm="¿Eliminar este ingreso?">
+                <button class="btn btn-small btn-danger" type="submit">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{else}}
+  <div class="empty">No hay ingresos registrados.</div>
+{{/if}}
