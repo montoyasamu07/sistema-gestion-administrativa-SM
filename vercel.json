@@ -1,8 +1,14 @@
 {
   "version": 2,
   "functions": {
-    "src/main.ts": {
+    "api/index.ts": {
       "includeFiles": "{views/**,data/**}"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api"
+    }
+  ]
 }
