@@ -1,19 +1,39 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import { mkdirSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 import hbs from 'hbs';
 import { AppModule } from './app.module';
 import { formatDate, formatMoney } from './common/format';
 import { NotFoundExceptionFilter } from './common/not-found.filter';
 
-async function bootstrap() {
-  mkdirSync(join(__dirname, '..', 'data'), { recursive: true });
+let cachedApp: NestExpressApplication;
+
+export async function createApp(): Promise<NestExpressApplication> {
+  if (cachedApp) {
+    return cachedApp;
+  }
+
+  if (!process.env.VERCEL) {
+    const localDataDir = join(process.cwd(), 'data');
+    if (!existsSync(localDataDir)) {
+      try {
+        mkdirSync(localDataDir, { recursive: true });
+      } catch {
+        // Ignorar
+      }
+    }
+  }
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  const viewsPath = join(__dirname, '..', 'views');
-  const publicPath = join(__dirname, '..', 'public');
+  const rootDir = process.cwd();
+  const viewsPath = existsSync(join(rootDir, 'views'))
+    ? join(rootDir, 'views')
+    : join(__dirname, '..', 'views');
+  const publicPath = existsSync(join(rootDir, 'public'))
+    ? join(rootDir, 'public')
+    : join(__dirname, '..', 'public');
 
   app.useStaticAssets(publicPath);
   app.setBaseViewsDir(viewsPath);
@@ -44,9 +64,23 @@ async function bootstrap() {
 
   app.useGlobalFilters(new NotFoundExceptionFilter());
 
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-  console.log(`Hotel Bucaro disponible en http://localhost:${port}`);
+  await app.init();
+  cachedApp = app;
+  return app;
 }
 
-bootstrap();
+// Handler serverless para Vercel
+export default async function handler(req: any, res: any) {
+  const app = await createApp();
+  const expressInstance = app.getHttpAdapter().getInstance();
+  return expressInstance(req, res);
+}
+
+// Servidor local tradicional
+if (!process.env.VERCEL) {
+  createApp().then(async (app) => {
+    const port = process.env.PORT || 3000;
+    await app.listen(port);
+    console.log(`Hotel Bucaro disponible en http://localhost:${port}`);
+  });
+}
