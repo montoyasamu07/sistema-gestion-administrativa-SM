@@ -60,7 +60,10 @@ export class IngresosController {
       );
     }
     await this.ingresosService.create(dto);
-    return res.redirect('/ingresos?mensaje=Ingreso registrado correctamente.');
+    return res.redirect(
+      303,
+      `/ingresos?mensaje=${encodeURIComponent('Ingreso registrado correctamente.')}`,
+    );
   }
 
   @Get(':id/editar')
@@ -70,7 +73,10 @@ export class IngresosController {
   ) {
     const ingreso = await this.ingresosService.findOne(id);
     if (!ingreso) {
-      return res.redirect('/ingresos?mensaje=El ingreso no existe.');
+      return res.redirect(
+        303,
+        `/ingresos?mensaje=${encodeURIComponent('El ingreso no existe.')}`,
+      );
     }
     return res.render(
       'ingresos/form',
@@ -103,14 +109,23 @@ export class IngresosController {
     }
     const updated = await this.ingresosService.update(id, dto);
     if (!updated) {
-      return res.redirect('/ingresos?mensaje=El ingreso no existe.');
+      return res.redirect(
+        303,
+        `/ingresos?mensaje=${encodeURIComponent('El ingreso no existe.')}`,
+      );
     }
-    return res.redirect('/ingresos?mensaje=Ingreso actualizado correctamente.');
+    return res.redirect(
+      303,
+      `/ingresos?mensaje=${encodeURIComponent('Ingreso actualizado correctamente.')}`,
+    );
   }
 
   @Post(':id/eliminar')
   async eliminar(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     await this.ingresosService.remove(id);
-    return res.redirect('/ingresos?mensaje=Ingreso eliminado.');
+    return res.redirect(
+      303,
+      `/ingresos?mensaje=${encodeURIComponent('Ingreso eliminado.')}`,
+    );
   }
 }

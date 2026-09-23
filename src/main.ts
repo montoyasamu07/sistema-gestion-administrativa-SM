@@ -62,6 +62,31 @@ export async function createApp(): Promise<NestExpressApplication> {
     Number(value) >= 0 ? 'positive' : 'negative',
   );
 
+  // Middleware para garantizar que las redirecciones en Vercel Serverless usen 303 (See Other)
+  // por defecto en lugar de 307 (Temporary Redirect), lo que previene bucles de redirección
+  // infinitos (ERR_TOO_MANY_REDIRECTS) en peticiones POST al seguir el patrón Post/Redirect/Get.
+  app.use((_req: any, res: any, next: any) => {
+    const originalRedirect = res.redirect.bind(res);
+    res.redirect = function (first: any, second?: any) {
+      const safeEncode = (url: string) => {
+        try {
+          return encodeURI(decodeURI(url));
+        } catch {
+          return encodeURI(url);
+        }
+      };
+
+      if (typeof first === 'string') {
+        return originalRedirect(303, safeEncode(first));
+      }
+      if (typeof first === 'number' && typeof second === 'string') {
+        return originalRedirect(first, safeEncode(second));
+      }
+      return originalRedirect(first, second);
+    };
+    next();
+  });
+
   app.useGlobalFilters(new NotFoundExceptionFilter());
 
   await app.init();
@@ -69,10 +94,34 @@ export async function createApp(): Promise<NestExpressApplication> {
   return app;
 }
 
+let serverPromise: Promise<any> | null = null;
+
 // Handler serverless para Vercel
 export default async function handler(req: any, res: any) {
-  const app = await createApp();
-  const expressInstance = app.getHttpAdapter().getInstance();
+  const originalVercelRedirect = res.redirect?.bind(res);
+  if (originalVercelRedirect) {
+    res.redirect = function (first: any, second?: any) {
+      const safeEncode = (url: string) => {
+        try {
+          return encodeURI(decodeURI(url));
+        } catch {
+          return encodeURI(url);
+        }
+      };
+      if (typeof first === 'string') {
+        return originalVercelRedirect(303, safeEncode(first));
+      }
+      if (typeof first === 'number' && typeof second === 'string') {
+        return originalVercelRedirect(first, safeEncode(second));
+      }
+      return originalVercelRedirect(first, second);
+    };
+  }
+
+  if (!serverPromise) {
+    serverPromise = createApp().then((app) => app.getHttpAdapter().getInstance());
+  }
+  const expressInstance = await serverPromise;
   return expressInstance(req, res);
 }
 
@@ -84,3 +133,4 @@ if (!process.env.VERCEL) {
     console.log(`Hotel Bucaro disponible en http://localhost:${port}`);
   });
 }
+

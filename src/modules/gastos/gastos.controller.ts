@@ -63,7 +63,10 @@ export class GastosController {
       );
     }
     await this.gastosService.create(dto);
-    return res.redirect('/gastos?mensaje=Gasto registrado correctamente.');
+    return res.redirect(
+      303,
+      `/gastos?mensaje=${encodeURIComponent('Gasto registrado correctamente.')}`,
+    );
   }
 
   @Get(':id/editar')
@@ -73,7 +76,10 @@ export class GastosController {
   ) {
     const gasto = await this.gastosService.findOne(id);
     if (!gasto) {
-      return res.redirect('/gastos?mensaje=El gasto no existe.');
+      return res.redirect(
+        303,
+        `/gastos?mensaje=${encodeURIComponent('El gasto no existe.')}`,
+      );
     }
     return res.render(
       'gastos/form',
@@ -108,14 +114,23 @@ export class GastosController {
     }
     const updated = await this.gastosService.update(id, dto);
     if (!updated) {
-      return res.redirect('/gastos?mensaje=El gasto no existe.');
+      return res.redirect(
+        303,
+        `/gastos?mensaje=${encodeURIComponent('El gasto no existe.')}`,
+      );
     }
-    return res.redirect('/gastos?mensaje=Gasto actualizado correctamente.');
+    return res.redirect(
+      303,
+      `/gastos?mensaje=${encodeURIComponent('Gasto actualizado correctamente.')}`,
+    );
   }
 
   @Post(':id/eliminar')
   async eliminar(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     await this.gastosService.remove(id);
-    return res.redirect('/gastos?mensaje=Gasto eliminado.');
+    return res.redirect(
+      303,
+      `/gastos?mensaje=${encodeURIComponent('Gasto eliminado.')}`,
+    );
   }
 }

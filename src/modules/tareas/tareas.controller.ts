@@ -68,7 +68,10 @@ export class TareasController {
       );
     }
     await this.tareasService.create(dto);
-    return res.redirect('/tareas?mensaje=Tarea registrada correctamente.');
+    return res.redirect(
+      303,
+      `/tareas?mensaje=${encodeURIComponent('Tarea registrada correctamente.')}`,
+    );
   }
 
   @Get(':id/editar')
@@ -78,7 +81,10 @@ export class TareasController {
   ) {
     const tarea = await this.tareasService.findOne(id);
     if (!tarea) {
-      return res.redirect('/tareas?mensaje=La tarea no existe.');
+      return res.redirect(
+        303,
+        `/tareas?mensaje=${encodeURIComponent('La tarea no existe.')}`,
+      );
     }
     return res.render(
       'tareas/form',
@@ -115,21 +121,33 @@ export class TareasController {
     }
     const updated = await this.tareasService.update(id, dto);
     if (!updated) {
-      return res.redirect('/tareas?mensaje=La tarea no existe.');
+      return res.redirect(
+        303,
+        `/tareas?mensaje=${encodeURIComponent('La tarea no existe.')}`,
+      );
     }
-    return res.redirect('/tareas?mensaje=Tarea actualizada correctamente.');
+    return res.redirect(
+      303,
+      `/tareas?mensaje=${encodeURIComponent('Tarea actualizada correctamente.')}`,
+    );
   }
 
   @Post(':id/estado')
   async estado(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     await this.tareasService.cambiarEstado(id);
-    return res.redirect('/tareas?mensaje=Estado de la tarea actualizado.');
+    return res.redirect(
+      303,
+      `/tareas?mensaje=${encodeURIComponent('Estado de la tarea actualizado.')}`,
+    );
   }
 
   @Post(':id/eliminar')
   async eliminar(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     await this.tareasService.remove(id);
-    return res.redirect('/tareas?mensaje=Tarea eliminada.');
+    return res.redirect(
+      303,
+      `/tareas?mensaje=${encodeURIComponent('Tarea eliminada.')}`,
+    );
   }
 
   private fechaInvalida(dto: TareaDto, errors: Record<string, string>) {
